@@ -1,4 +1,5 @@
-"# Glaucus" 
+Problem Statement:-
+
 The task is to consistently increment a number in a database when parallel threads are racing to increment the number.
 
 Create a table Number in database (MySQL preferred) with one integer type field.
