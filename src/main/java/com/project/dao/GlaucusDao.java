@@ -21,12 +21,16 @@ public class GlaucusDao {
 	 * @exception It throws CannotGetJdbcConnectionException for database connection error.
 	 * @exception It throws General Exception for unknown error.
 	 */
-	public synchronized String increase () { 
-		
+	public String increase () { 
+					
 		String statement="Updated";
+		synchronized(GlaucusDao.class) {
 		try {
-		jdbcTemplateObject.update("UPDATE public.glaucus SET \"number\"=((SELECT \"number\" FROM public.glaucus)+1)");
-		}
+
+		jdbcTemplateObject.update("BEGIN;LOCK TABLE glaucus IN ACCESS EXCLUSIVE MODE;UPDATE public.glaucus SET \"number\"=((SELECT \"number\" FROM public.glaucus)+1);COMMIT;");
+		
+			}
+			
 		catch(CannotGetJdbcConnectionException e) {
 			System.out.println(e);
 			statement = "Database Connection Error";
@@ -35,6 +39,7 @@ public class GlaucusDao {
 		{
 			System.out.println(e);
 			statement="Error occured";
+		}
 		}
 		
 		return statement;
